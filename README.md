@@ -1,6 +1,6 @@
 # Bookstore Spring Boot Application
 
-In order to run the project use the *docker-compose.yaml* file
+In order to run the project use the *docker-compose.yaml* file.
 
 
 ## Bookstore API Introduction
