@@ -2,6 +2,10 @@
 
 In order to run the project use the *docker-compose.yaml* file.
 
+After composing up the application go to browser type localhost:port/path.
+where port number is whatever you defined in the file.
+and path is URI mentioned below.
+
 
 ## Bookstore API Introduction
 
