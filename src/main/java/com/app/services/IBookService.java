@@ -7,5 +7,5 @@ public interface IBookService {
     public Page<Book> getBooks(String author, String title, Integer pageNumber, Integer pageSize);
     public Book addBook(Book book);
     public Book getBook(Long isbn);
-    public Book buyBook(Book book);
+    public Book buyBook(Long isbn);
 }

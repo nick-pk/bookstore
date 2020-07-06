@@ -5,23 +5,23 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
-public class EndPointError {
+public class ErrorDetails {
 
     private HttpStatus status;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime timestamp;
     private String message;
 
-    private EndPointError() {
+    private ErrorDetails() {
         timestamp = LocalDateTime.now();
     }
 
-    EndPointError(HttpStatus status) {
+    ErrorDetails(HttpStatus status) {
         this();
         this.status = status;
     }
 
-    public EndPointError(HttpStatus status, String message) {
+    public ErrorDetails(HttpStatus status, String message) {
         this();
         this.status = status;
         this.message = message;

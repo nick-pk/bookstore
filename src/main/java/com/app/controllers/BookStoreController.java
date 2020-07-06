@@ -1,6 +1,5 @@
 package com.app.controllers;
 
-import com.app.exceptions.BookNotFoundException;
 import com.app.models.Book;
 import com.app.services.IBookService;
 import com.app.services.IMediaService;
@@ -22,7 +21,7 @@ public class BookStoreController {
     }
 
     /**
-     * filtering data using title and author as partial or full matched
+     * filter data using title and author on partial or full matching
      * @param author to search by author
      * @param title to search by title
      * @param pageNumber
@@ -38,8 +37,8 @@ public class BookStoreController {
     }
 
     /**
-     * Saving a Book
-     * @param book Book Object with mandatory fields isbn,title,quantity,author
+     * create or update a book
+     * @param book book object with mandatory fields isbn,title,quantity,author
      * @return saved book
      */
     @PostMapping
@@ -48,7 +47,7 @@ public class BookStoreController {
     }
 
     /**
-     * Search Book with given ISBN
+     * search book with given ISBN
      * @param isbn
      * @return a book with required isbn
      */
@@ -58,18 +57,14 @@ public class BookStoreController {
     }
 
     /**
-     * Search a post for given isbn
+     * search a post for given isbn
      * @param isbn
      * @return posts with title containing given isbn
      * @throws JsonProcessingException
      */
     @GetMapping("{isbn}/posts")
     public List<String> fetchPosts(@PathVariable Long isbn) throws JsonProcessingException {
-        Book book = bookService.getBook(isbn);
-        if (book == null) {
-            throw new BookNotFoundException();
-        }
-        return mediaService.fetchPosts(isbn, book.getTitle());
+        return mediaService.fetchPosts(isbn);
     }
 
     /**
@@ -79,10 +74,6 @@ public class BookStoreController {
      */
     @GetMapping("{isbn}/buy")
     public Book buyBook(@PathVariable Long isbn) {
-        Book book = bookService.getBook(isbn);
-        if (book == null) {
-            throw new BookNotFoundException();
-        }
-        return bookService.buyBook(book);
+        return bookService.buyBook(isbn);
     }
 }

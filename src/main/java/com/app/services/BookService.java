@@ -9,30 +9,30 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BookService implements IBookService {
-    BookRepository repository;
+    private BookRepository bookRepository;
 
-    public BookService(BookRepository repository) {
-        this.repository = repository;
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
     @Override
     public Page<Book> getBooks(String author, String title, Integer pageNumber, Integer pageSize){
-        return repository.findByAuthorIgnoreCaseContainingAndTitleIgnoreCaseContaining(author, title, PageRequest.of(pageNumber, pageSize));
+        return bookRepository.findByAuthorIgnoreCaseContainingAndTitleIgnoreCaseContaining(author, title, PageRequest.of(pageNumber, pageSize));
 
     }
 
     @Override
     public Book addBook(Book book) {
-        Book foundBook = repository.findByIsbn(book.getIsbn());
+        Book foundBook = bookRepository.findByIsbn(book.getIsbn());
         if (foundBook != null) {
             book.setQuantity(foundBook.getQuantity() + book.getQuantity());
         }
-        return repository.save(book);
+        return bookRepository.save(book);
     }
 
     @Override
     public Book getBook(Long isbn) {
-        Book book = repository.findByIsbn(isbn);
+        Book book = bookRepository.findByIsbn(isbn);
         if (book == null) {
             throw new BookNotFoundException();
         }
@@ -40,11 +40,15 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public Book buyBook(Book book) {
+    public Book buyBook(Long isbn) {
+        Book book = bookRepository.findByIsbn(isbn);
+        if (book == null) {
+            throw new BookNotFoundException();
+        }
         if (book.getQuantity() > 1) {
             book.setQuantity(book.getQuantity() - 1);
         }
-        Book updatedBook = repository.save(book);
+        Book updatedBook = bookRepository.save(book);
         updatedBook.setQuantity(1);
         return updatedBook;
     }

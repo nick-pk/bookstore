@@ -1,6 +1,8 @@
 package com.app.services;
 
+import com.app.exceptions.BookNotFoundException;
 import com.app.exceptions.MediaException;
+import com.app.models.Book;
 import com.app.models.catchers.Post;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +17,18 @@ import java.util.List;
 public class MediaService implements IMediaService {
     @Value("${service.endpoint}")
     private String baseURL;
-    public List<String> fetchPosts(Long isbn,String title) {
+    private IBookService bookService;
+
+    public MediaService(IBookService bookService) {
+        this.bookService = bookService;
+    }
+
+    public List<String> fetchPosts(Long isbn) {
+        Book book = bookService.getBook(isbn);
+        if (book == null) {
+            throw new BookNotFoundException();
+        }
+        String title=book.getTitle();
         RestTemplate template= new RestTemplate();
         ObjectMapper mapper=new ObjectMapper();
         List<Post> postList= null;

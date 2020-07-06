@@ -1,8 +1,7 @@
 version: '3'
 services:
-  bookstore-mysql:
-    container_name: bookstore-mysql
-    image: mysql:5.6
+  database:
+    image: mysql
     environment:
       MYSQL_DATABASE: bookstore
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
@@ -10,13 +9,13 @@ services:
     - 3307:3306
     volumes:
       - ./dbdata:/var/lib/mysql
-  bookstore-app:
+  app:
     build: ./
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://bookstore-mysql:3306/bookstore?createDatabaseIfNotExist=true&useSSL=false
+      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/bookstore?createDatabaseIfNotExist=true&useSSL=false
       DB_USER: root
       DB_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - 8081:8080
     depends_on:
-      - bookstore-mysql
+      - database

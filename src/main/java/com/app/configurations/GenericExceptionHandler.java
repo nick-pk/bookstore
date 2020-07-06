@@ -27,13 +27,13 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String error = "Malformed JSON request";
-        return buildResponseEntity(new EndPointError(HttpStatus.BAD_REQUEST, error));
+        return buildResponseEntity(new ErrorDetails(HttpStatus.BAD_REQUEST, error));
     }
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String error = "Malformed JSON request";
-        return buildResponseEntity(new EndPointError(HttpStatus.BAD_REQUEST, error));
+        return buildResponseEntity(new ErrorDetails(HttpStatus.BAD_REQUEST, error));
     }
 
     @Override
@@ -44,26 +44,26 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        return buildResponseEntity(new EndPointError(HttpStatus.BAD_REQUEST, errors.toString()));
+        return buildResponseEntity(new ErrorDetails(HttpStatus.BAD_REQUEST, errors.toString()));
     }
 
-    private ResponseEntity<Object> buildResponseEntity(EndPointError endPointError) {
-        return new ResponseEntity<>(endPointError, endPointError.getStatus());
+    private ResponseEntity<Object> buildResponseEntity(ErrorDetails errorDetails) {
+        return new ResponseEntity<>(errorDetails, errorDetails.getStatus());
     }
 
     @ExceptionHandler(BookNotFoundException.class)
     protected ResponseEntity<Object> handleBookNotFound(
             BookNotFoundException ex) {
-        EndPointError endPointError = new EndPointError(NOT_FOUND);
-        endPointError.setMessage(ex.getMessage());
-        return buildResponseEntity(endPointError);
+        ErrorDetails errorDetails = new ErrorDetails(NOT_FOUND);
+        errorDetails.setMessage(ex.getMessage());
+        return buildResponseEntity(errorDetails);
     }
 
     @ExceptionHandler(MediaException.class)
     protected ResponseEntity<Object> handleMediaException(
             MediaException ex) {
-        EndPointError endPointError = new EndPointError(NOT_FOUND);
-        endPointError.setMessage(ex.getMessage());
-        return buildResponseEntity(endPointError);
+        ErrorDetails errorDetails = new ErrorDetails(NOT_FOUND);
+        errorDetails.setMessage(ex.getMessage());
+        return buildResponseEntity(errorDetails);
     }
 }
